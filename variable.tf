@@ -35,6 +35,22 @@ variable "rpc_service_name" {
   default = "eth-rpc"
 }
 
+variable "admin_host" {
+  type        = string
+  default     = "graph-admin.appflex.io"
+}
+
+variable "admin_service_name" {
+  type        = string
+  default     = "admin-service"
+}
+
+variable "admin_service_port" {
+  description = "Port for the Admin service"
+  type        = number
+  default     = 8030
+}
+
 variable "graph_service_port" {
   type    = number
   default = 8000

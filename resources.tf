@@ -192,7 +192,11 @@ resource "kubernetes_stateful_set" "geth" {
             "--ws.addr=0.0.0.0",
             "--cache=4096"
           ]
-
+          # ✅ Unset the problematic GETH_PORT env
+          env {
+            name  = "GETH_PORT"
+            value = ""
+          }
           port {
             container_port = 8545
           }

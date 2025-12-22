@@ -1,50 +1,54 @@
-# -----------------------------
-# Web3 Ingress with TLS
-# -----------------------------
-resource "kubernetes_ingress" "web3_ingress" {
+
+resource "kubernetes_ingress_v1" "web3_ingress" {
   metadata {
     name      = "web3-ingress"
-    namespace = "graph"
+    namespace = var.graph_namespace
     annotations = {
       "kubernetes.io/ingress.class"    = "nginx"
-
+      #"cert-manager.io/cluster-issuer" = var.cluster_issuer
     }
   }
 
   spec {
+    rule {
+      host = var.graph_host
+      http {
+        path {
+          path      = "/"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = var.graph_service_name
+              port {
+                number = var.graph_service_port
+              }
+            }
+          }
+        }
+      }
+    }
+
+    rule {
+      host = var.rpc_host
+      http {
+        path {
+          path      = "/"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = var.rpc_service_name
+              port {
+                number = var.rpc_service_port
+              }
+            }
+          }
+        }
+      }
+    }
+
     tls {
-      hosts       = ["graph.appflex.io", "rpc.appflex.io"]
-      secret_name = "web3-tls"
-    }
-
-    rule {
-      host = "graph.appflex.io"
-      http {
-        path {
-          path = "/"
-          backend {
-            service {
-              name = "graph-node" # must match your Graph Node Service name
-              port { number = 8000 }
-            }
-          }
-        }
-      }
-    }
-
-    rule {
-      host = "rpc.appflex.io"
-      http {
-        path {
-          path = "/"
-          backend {
-            service {
-              name = "eth-rpc" # must match your RPC NGINX Service name
-              port { number = 80 }
-            }
-          }
-        }
-      }
+      hosts       = [var.graph_host, var.rpc_host]
+      secret_name = var.tls_secret_name
     }
   }
 }

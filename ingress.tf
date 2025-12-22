@@ -10,6 +10,7 @@ resource "kubernetes_ingress_v1" "web3_ingress" {
   }
 
   spec {
+    # Graph service
     rule {
       host = var.graph_host
       http {
@@ -28,6 +29,7 @@ resource "kubernetes_ingress_v1" "web3_ingress" {
       }
     }
 
+    # RPC service
     rule {
       host = var.rpc_host
       http {
@@ -46,8 +48,28 @@ resource "kubernetes_ingress_v1" "web3_ingress" {
       }
     }
 
+    # Admin service
+    rule {
+      host = var.admin_host
+      http {
+        path {
+          path      = "/"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = var.admin_service_name
+              port {
+                number = 8030
+              }
+            }
+          }
+        }
+      }
+    }
+
+    # TLS for all hosts
     tls {
-      hosts       = [var.graph_host, var.rpc_host]
+      hosts       = [var.graph_host, var.rpc_host, var.admin_host]
       secret_name = var.tls_secret_name
     }
   }

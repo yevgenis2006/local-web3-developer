@@ -1,7 +1,4 @@
 
-# -----------------------------
-# Postgres
-# -----------------------------
 output "postgres_service" {
   value = kubernetes_service.postgres.metadata[0].name
 }

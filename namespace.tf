@@ -1,4 +1,5 @@
 
+
 resource "kubernetes_namespace" "graph" {
   metadata {
     name = "graph"

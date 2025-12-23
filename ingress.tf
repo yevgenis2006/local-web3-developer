@@ -15,7 +15,7 @@ resource "kubernetes_ingress_v1" "web3_ingress" {
       host = var.graph_host
       http {
         path {
-          path      = "/"
+          path      = "/graphql"
           path_type = "Prefix"
           backend {
             service {
@@ -53,7 +53,7 @@ resource "kubernetes_ingress_v1" "web3_ingress" {
       host = var.admin_host
       http {
         path {
-          path      = "/"
+          path      = "/admin"
           path_type = "Prefix"
           backend {
             service {
